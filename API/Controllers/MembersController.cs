@@ -1,0 +1,35 @@
+using API.Data;
+using API.Entities;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace API
+{
+    [Route("api/[controller]")] //localhost:5001/api/members
+    [ApiController]
+    public class MembersController(AppDBContext context) : ControllerBase
+    {
+        [HttpGet]
+        public async Task<ActionResult<List<AppUser>>> GetMembers()
+        {
+            var members = await context.Users.ToListAsync();
+            return members;
+        }
+
+        [HttpGet("{id}")] //localhost:5001/api/members/101-sam
+
+        public async Task<ActionResult<AppUser>> GetMember(string id)
+        {
+            var member = await context.Users.FindAsync(id);
+            if (member == null)
+            {
+                return NotFound();
+            }
+            return member;
+        }
+
+    }
+
+
+}
